@@ -15,9 +15,10 @@ from functions import (
     display_textbox,
     extract_images,
     display_icon,
-    resize_image,
     display_images,
+    resize_image,
 )
+
 
 # from functions import display_logo
 # from functions import display_icon
@@ -27,6 +28,60 @@ from functions import (
 page_Contents = []
 all_images = []
 img_idx = [0]
+displayed_img = []
+
+# initiallize a Tkinter root object
+root = tk.Tk()
+
+root.geometry("+%d+%d" % (350, 10))  # place GUI at x=350, y=10
+
+# ARROW BUTTONS FUNCTIONALITY
+# right arrow
+
+
+def right_arrow(all_images, current_img, what_text):
+
+    # restrict button actions to the number of avialable images
+    if img_idx[-1] >= 1:
+        new_idx = img_idx[-1] + 1
+        img_idx.pop()
+        img_idx.append(new_idx)
+
+        if displayed_images:
+            displayed_img[-1].grid_forget()
+            displayed_img.pop()
+            new_img = all_images[img_idx[-1]]
+            current_img = display_images(new_img)
+            displayed_img.append(current_img)
+            what_text.set(
+                "image" + str(img_idx[-1] + 1) + " out of " + str(len(all_images))
+            )
+        elif img_idx == len(all_images) - 1:  # from here
+            print("index out of range")
+            if displayed_img:
+                displayed_img[-1].grid_forget()
+                displayed_img.pop()
+
+
+def left_arrow(all_images, current_img, what_text):
+    if img_idx[-1] >= 1:
+        new_idx = img_idx[-1] - 1
+        img_idx.pop()
+        img_idx.append(new_idx)
+        if display_images:
+            displayed_img[-1].grid_forget()
+            displayed_img.pop()
+            new_img = all_images[img_idx[-1]]
+            current_img = display_images(new_img)
+            displayed_img.append(current_img)
+            what_text.set(
+                "image" + str(img_idx[-1] + 1) + " out of " + str(len(all_images))
+            )
+        elif img_idx == -1:  # from here
+            print("index out of range")
+            if displayed_img:
+                displayed_img[-1].grid_forget()
+                displayed_img.pop()
 
 
 def copy_text(content):
@@ -48,10 +103,6 @@ def save_image(i):
         i = i.convert("RGB")
     i.save("img.png", format="png")
 
-
-root = tk.Tk()
-
-root.geometry("+%d+%d" % (350, 10))  # place GUI at x=350, y=10
 
 # header area - logo & browse button
 header = Frame(root, width=800, height=175, bg="white")
@@ -84,6 +135,11 @@ instructions.grid(columnspan=3, column=0, row=1)
 
 
 def open_file():
+
+    for i in img_idx:
+        img_idx.pop()
+        img_idx.append(0)
+
     browse_text.set("loading...")
     file = askopenfile(parent=root, mode="rb", filetypes=[("Pdf file", "*.pdf")])
     if file:
@@ -94,6 +150,13 @@ def open_file():
         page_content = page_content.replace("\u2122", "'")
         page_Contents.append(page_content)
 
+        if displayed_img:
+            displayed_img[-1].grid_forget()
+            displayed_img.pop
+
+            for i in range(0, len(all_images)):
+                all_images.pop()
+
         images = extract_images(page)
 
         for i in images:
@@ -101,7 +164,8 @@ def open_file():
 
         img = images[img_idx[-1]]
 
-        display_images(img)
+        current_image = display_images(img)
+        displayed_img.append(current_image)
 
         # show text box on row 4 col 0
         display_textbox(page_content, 4, 0, root)
@@ -117,11 +181,27 @@ def open_file():
 
         img_menu.grid(columnspan=3, rowspan=1, row=2)
 
-        what_image = Label(root, text="imaga 1 of 5", font=("shanti", 10))
+        what_text = StringVar()
+        what_image = Label(root, textvariable=what_text, font=("shanti", 10))
+        what_text.set(
+            "image" + str(img_idx[-1] + 1) + " out of " + str(len(all_images))
+        )
         what_image.grid(row=2, column=1)
 
-        display_icon("arrow_l.png", 2, 0, E)
-        display_icon("arrow_r.png", 2, 2, W)
+        display_icon(
+            "arrow_l.png",
+            2,
+            0,
+            E,
+            lambda: left_arrow(all_images, current_image, what_text),
+        )
+        display_icon(
+            "arrow_r.png",
+            2,
+            2,
+            W,
+            lambda: right_arrow(all_images, current_image, what_text),
+        )
 
         save_img = Frame(root, width=800, height=60, bg="#c8c8c8")
         save_img.grid(columnspan=3, rowspan=1, row=3)
