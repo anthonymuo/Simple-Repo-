@@ -20,10 +20,12 @@ from functions import (
 )
 
 
-# from functions import display_logo
-# from functions import display_icon
-# from functions import display_textbox
-# # from functions import extract_images
+# #global parameters, updating dynamically
+# all_content = []
+# all_images = []
+# img_idx = [0]
+# displayed_img = []
+
 
 page_Contents = []
 all_images = []
@@ -38,50 +40,101 @@ root.geometry("+%d+%d" % (350, 10))  # place GUI at x=350, y=10
 # ARROW BUTTONS FUNCTIONALITY
 # right arrow
 
+################################################
 
-def right_arrow(all_images, current_img, what_text):
 
+# ARROW BUTTONS FUNCTIONALITY
+# right arrow
+def right_arrow(all_images, selected_img, what_text):
     # restrict button actions to the number of avialable images
-    if img_idx[-1] >= 1:
+    if img_idx[-1] < len(all_images) - 1:
+        # change to the following index
         new_idx = img_idx[-1] + 1
         img_idx.pop()
         img_idx.append(new_idx)
-
-        if displayed_images:
+        # remove displayed image if exists
+        if displayed_img:
             displayed_img[-1].grid_forget()
             displayed_img.pop()
-            new_img = all_images[img_idx[-1]]
-            current_img = display_images(new_img)
-            displayed_img.append(current_img)
-            what_text.set(
-                "image" + str(img_idx[-1] + 1) + " out of " + str(len(all_images))
-            )
-        elif img_idx == len(all_images) - 1:  # from here
-            print("index out of range")
-            if displayed_img:
-                displayed_img[-1].grid_forget()
-                displayed_img.pop()
+        # create a new image in the new index & display it
+        new_img = all_images[img_idx[-1]]
+        selected_img = display_images(new_img)
+        displayed_img.append(selected_img)
+        # update the new index on the interface
+        what_text.set(
+            "image " + str(img_idx[-1] + 1) + " out of " + str(len(all_images))
+        )
 
 
-def left_arrow(all_images, current_img, what_text):
+# left arrow
+def left_arrow(all_images, selected_img, what_text):
+    # restrict button actions to indices greater than 1
     if img_idx[-1] >= 1:
+        # change to the previous index
         new_idx = img_idx[-1] - 1
         img_idx.pop()
         img_idx.append(new_idx)
-        if display_images:
+        # remove displayed image if exists
+        if displayed_img:
             displayed_img[-1].grid_forget()
             displayed_img.pop()
-            new_img = all_images[img_idx[-1]]
-            current_img = display_images(new_img)
-            displayed_img.append(current_img)
-            what_text.set(
-                "image" + str(img_idx[-1] + 1) + " out of " + str(len(all_images))
-            )
-        elif img_idx == -1:  # from here
-            print("index out of range")
-            if displayed_img:
-                displayed_img[-1].grid_forget()
-                displayed_img.pop()
+        # create a new image in the new index & display it
+        new_img = all_images[img_idx[-1]]
+        selected_img = display_images(new_img)
+        displayed_img.append(selected_img)
+        # update the new index on the interface
+        what_text.set(
+            "image " + str(img_idx[-1] + 1) + " out of " + str(len(all_images))
+        )
+
+
+################################################################################
+
+# #ARROW BUTTONS FUNCTIONALITY
+# #right Arrow
+# def right_arrow(all_images, current_img, what_text):
+
+#     # restrict button actions to the number of avialable images
+#     if img_idx[-1] >= 1:
+#         new_idx = img_idx[-1] + 1
+#         img_idx.pop()
+#         img_idx.append(new_idx)
+
+#         if displayed_images:
+#             displayed_img[-1].grid_forget()
+#             displayed_img.pop()
+#             new_img = all_images[img_idx[-1]]
+#             current_img = display_images(new_img)
+#             displayed_img.append(current_img)
+#             what_text.set(
+#                 "image" + str(img_idx[-1] + 1) + " out of " + str(len(all_images))
+#             )
+#         elif img_idx == len(all_images) - 1:  # from here
+#             print("index out of range")
+#             if displayed_img:
+#                 displayed_img[-1].grid_forget()
+#                 displayed_img.pop()
+
+
+# def left_arrow(all_images, current_img, what_text):
+#     if img_idx[-1] >= 1:
+#         new_idx = img_idx[-1] - 1
+#         img_idx.pop()
+#         img_idx.append(new_idx)
+#         if display_images:
+#             displayed_img[-1].grid_forget()
+#             displayed_img.pop()
+#             new_img = all_images[img_idx[-1]]
+#             current_img = display_images(new_img)
+#             displayed_img.append(current_img)
+#             what_text.set(
+#                 "image" + str(img_idx[-1] + 1) + " out of " + str(len(all_images))
+#             )
+#         elif img_idx == -1:  # from here
+#             print("index out of range")
+#             if displayed_img:
+#                 displayed_img[-1].grid_forget()
+#                 displayed_img.pop()
 
 
 def copy_text(content):
