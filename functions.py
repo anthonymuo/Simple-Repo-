@@ -76,3 +76,29 @@ def display_images(img):
     img_label.image = img
     img_label.grid(row=4, column=2, rowspan=2)
     return img_label
+
+
+######################################################################
+
+
+def copy_text(content):
+    root.clipboard_clear()
+    root.clipboard_append(content[-1])
+
+
+def save_all(images):
+    counter = 1
+    for i in images:
+        if i.mode != "RGB":  # convert images to RGB befor saving them
+            i = i.convert("RGB")
+        i.save("img" + str(counter) + ".png", format="png")
+        counter += 1
+
+
+def save_image(i):
+    if i.mode != "RGB":  # convert images to RGB befor saving them
+        i = i.convert("RGB")
+    i.save("img.png", format="png")
+
+
+#     ##################################################################
