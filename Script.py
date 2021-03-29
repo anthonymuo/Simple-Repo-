@@ -235,45 +235,32 @@ def open_file():
         saveAll_btn.grid(row=3, column=1)
         save_btn.grid(row=3, column=2)
 
-
-########################
-# def open_file():
-#     browse_text.set("loading...")
-#     file = askopenfile(
-#         parent=root, mode="rb", title="Choose a file", filetype=[("Pdf file", "*.pdf")]
-#     )
-#     if file:
-#         read_pdf = PyPDF2.PdfFileReader(file)
-#         page = read_pdf.getPage(0)
-#         page_content = page.extractText()
-#         # page_content = page_content.encode('cp1252')
-#         page_content = page_content.replace("\u2122", "'")
-
-#         # show text box on row 4 col 0
-#         display_textbox(page_content, 4, 0, root)
-
-#     browse_text.set("Browse")
+        # reset the button text back to Browse
+        browse_text.set("Browse")  ####...................................
 
 
-# # browse button
-browse_text = tk.StringVar()
-browse_btn = tk.Button(
+display_logo("logo.png", 0, 0)
+
+
+# browse button
+browse_text = StringVar()
+browse_btn = Button(
     root,
     textvariable=browse_text,
     command=lambda: open_file(),
-    font="Raleway",
+    font=("Raleway", 12),
     bg="#20bebe",
     fg="white",
-    height=2,
+    height=1,
     width=15,
 )
 browse_text.set("Browse")
 browse_btn.grid(column=2, row=1, sticky=NE, padx=50)
 
-canvas = tk.Canvas(root, width=600, height=250)
-canvas.grid(
-    columnspan=3,
-)
+
+# instructions
+instructions = Label(root, text="Select a PDF file", font=("Raleway", 10), bg="white")
+instructions.grid(column=2, row=0, sticky=SE, padx=75, pady=5)
 
 
 ####
